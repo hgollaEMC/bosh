@@ -109,13 +109,37 @@ module Bosh::Director::ConfigServer
         ['addons', Integer, 'jobs', Integer, 'consumes', String, 'properties'],
       ]
 
-      # Deployment name is passed here as nil because we required all placeholders
+      # must_be_absolute_name is true because we require all placeholders
       # in the runtime config to be absolute, except for the properties in addons
       @config_server_client.interpolate(
         runtime_manifest,
         deployment_name,
         nil,
         { subtrees_to_ignore: ignored_subtrees, must_be_absolute_name: true }
+      )
+    end
+
+    # @param [Hash] cloud_manifest Cloud Manifest Hash to be interpolated
+    # @param deployment_name [String] Name of current deployment
+    # @return [Hash] A Deep copy of the interpolated manifest Hash
+    def interpolate_cloud_manifest(cloud_manifest, deployment_name)
+      ignored_subtrees = [
+          ['azs', Integer, 'cloud_properties', String],
+          ['networks', Integer, 'cloud_properties', String],
+          ['networks', Integer, 'subnets', Integer, 'cloud_properties', String],
+          ['vm_types', Integer, 'cloud_properties', String],
+          ['vm_extensions', Integer, 'cloud_properties', String],
+          ['disk_types', Integer, 'cloud_properties', String],
+          ['compilation', 'cloud_properties', String]
+      ]
+
+      # must_be_absolute_name is true because we require all placeholders
+      # in the cloud config to be absolute
+      @config_server_client.interpolate(
+          cloud_manifest,
+          deployment_name,
+          nil,
+          { subtrees_to_ignore: ignored_subtrees, must_be_absolute_name: true }
       )
     end
 
