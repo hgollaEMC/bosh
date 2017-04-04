@@ -149,6 +149,7 @@ module Bosh::Director
 
       config_server_client = @config_server_client_factory.create_client
       env = config_server_client.interpolate(Bosh::Common::DeepCopy.copy(env), deployment_name, instance.variable_set)
+      cloud_properties = config_server_client.interpolate(Bosh::Common::DeepCopy.copy(cloud_properties), deployment_name, instance.variable_set)
 
       vm_options = {instance: instance_model, agent_id: agent_id}
       options = {}
