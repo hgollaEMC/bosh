@@ -244,7 +244,7 @@ module Bosh
       end
 
       def reset
-        FileUtils.rm_rf(@base_dir)
+        FileUtils.mv(@base_dir, "#{@base_dir}-#{SecureRandom.hex}")
         prepare
       end
 
